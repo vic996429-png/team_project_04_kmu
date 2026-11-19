@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>민원 쓰기 · 성북 안심 민원 필터</title>
+  <link rel="stylesheet" href="/assets/app.css">
+  <link rel="stylesheet" href="/assets/citizen.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="/"><span class="brand__mark" aria-hidden="true">성북</span>안심 민원 필터 <small>시제품</small></a>
+      <nav class="nav" aria-label="화면 이동">
+        <a href="/" aria-current="page">민원 쓰기</a>
+        <a href="/status">처리 상태</a>
+        <a href="/officer">담당자 현황판</a>
+        <a href="/admin">관리·감독</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page citizen">
+    <div class="page-head">
+      <h1>구청장에게 바란다</h1>
+      <p>성북구청에 바라는 점이나 불편한 점을 적어 주세요. <span id="period-line"></span></p>
+    </div>
+
+    <div class="citizen__grid">
+      <section class="card card--accent" id="write-card" aria-labelledby="write-title">
+        <h2 id="write-title" class="sr-only">민원 쓰기</h2>
+        <form id="form" novalidate>
+          <div class="field">
+            <label for="title">제목<span class="req" aria-hidden="true">*</span></label>
+            <input class="input" id="title" name="title" maxlength="60" required placeholder="예: 성북동 골목 가로등 고장">
+          </div>
+          <div class="field">
+            <label for="category">분야</label>
+            <select class="select" id="category" name="category">
+              <option>도로·시설</option><option>교통·주차</option><option>환경·청소</option><option>복지</option><option>기타</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="text">내용<span class="req" aria-hidden="true">*</span></label>
+            <textarea class="textarea" id="text" name="text" maxlength="4000" required placeholder="언제, 어디서, 무엇이 불편한지 적어 주시면 더 빨리 처리할 수 있습니다."></textarea>
+            <div class="help"><span id="text-err" class="err" role="alert"></span><span><span id="count">0</span> / 4,000자</span></div>
+          </div>
+          <fieldset class="consent" aria-describedby="consent-err">
+            <legend>개인정보 수집·이용 안내</legend>
+            <dl class="consent__table">
+              <div><dt>목적</dt><dd>민원 접수·처리, 접수 전 표현 안내</dd></div>
+              <div><dt>항목</dt><dd>제목, 분야, 내용(내용에 적은 개인정보 포함)</dd></div>
+              <div><dt>보유 기간</dt><dd>이 시제품은 이 브라우저에만 저장하고 서버에는 저장하지 않습니다. 실제 도입 때는 성북구 기준을 따릅니다. [확인 필요]</dd></div>
+              <div><dt>거부할 권리</dt><dd>동의하지 않을 수 있습니다. 필수 항목에 동의하지 않으면 이 화면으로는 접수할 수 없습니다.</dd></div>
+            </dl>
+            <label class="check"><input type="checkbox" id="agree-required" aria-describedby="consent-err"><span><b>(필수)</b> 위 내용에 따라 개인정보를 수집·이용하는 데 동의합니다.</span></label>
+            <label class="check"><input type="checkbox" id="agree-ai"><span><b>(선택)</b> 접수 전에 AI가 표현을 살펴보는 데 동의합니다. 이름·전화번호·주소를 ***로 가린 글을 외부 AI 서비스(Claude·Groq·Gemini 중 하나)로 보냅니다. 동의하지 않아도 AI 안내 없이 그대로 접수되며 처리에 불이익이 없습니다.</span></label>
+            <p class="err" id="consent-err" role="alert"></p>
+            <p class="small muted">고지 항목 근거: 「개인정보 보호법」 제15조제2항. 외부 AI 전송이 처리 위탁·국외 이전에 해당하는지는 [확인 필요]</p>
+          </fieldset>
+          <button class="btn btn--brand btn--lg btn--block" id="submit" type="submit">민원 접수하기</button>
+        </form>
+      </section>
+
+      <aside class="citizen__side" aria-label="이용 안내">
+        <div class="callout callout--brand notice">
+          <div>
+            <p><b>AI가 표현을 살펴봅니다</b></p>
+            <p class="small">접수 전에 AI가 욕설·위협 표현이 있는지 살펴보고, 있으면 고쳐 쓸 문장을 제안합니다. 제안을 따르지 않아도 그대로 접수되며 처리 기한도 같습니다.</p>
+          </div>
+        </div>
+        <div class="callout callout--neutral">
+          <div>
+            <p><b>개인정보는 가려서 보냅니다</b></p>
+            <p class="small">이름·전화번호·주소는 AI에 보내기 전에 가립니다. 이 시제품에는 실제 개인정보를 쓰지 마세요.</p>
+          </div>
+        </div>
+        <div class="tryit">
+          <p class="small muted">시연용 예시로 채우기</p>
+          <div class="row">
+            <button class="btn btn--sm btn--ghost" type="button" data-sample="0">생활 불편</button>
+            <button class="btn btn--sm btn--ghost" type="button" data-sample="1">강한 불만</button>
+            <button class="btn btn--sm btn--ghost" type="button" data-sample="2">비꼬는 말</button>
+            <button class="btn btn--sm btn--ghost" type="button" data-sample="3">욕설 섞임</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <section class="card done" id="done" hidden aria-labelledby="done-title">
+      <div class="done__mark" aria-hidden="true"></div>
+      <h2 id="done-title" tabindex="-1">접수되었습니다</h2>
+      <p class="muted" id="done-msg"></p>
+      <dl class="done__meta">
+        <div><dt>접수번호</dt><dd id="done-id"></dd></div>
+        <div><dt>처리 기간</dt><dd id="done-period">—</dd></div>
+        <div><dt>문의</dt><dd id="done-contact">—</dd></div>
+      </dl>
+      <p class="small muted" id="done-source"></p>
+      <div class="row" style="justify-content:center">
+        <a class="btn btn--brand" id="go-status" href="/status">처리 상태 보기</a>
+        <button class="btn btn--ghost" id="again" type="button">새 민원 쓰기</button>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="dialog" id="guide" aria-labelledby="guide-title">
+    <div class="dialog__body">
+      <h2 id="guide-title">이 표현을 고쳐서 보내 주시겠어요?</h2>
+      <p class="muted small">담당 공무원이 읽기 힘든 표현이 있습니다. 고치지 않아도 접수됩니다.</p>
+      <div class="guide__block">
+        <h3>문제가 된 문장</h3>
+        <ul id="guide-evidence" class="guide__evidence"></ul>
+        <p class="small" id="guide-reason"></p>
+      </div>
+      <div class="guide__block guide__suggest">
+        <div class="row"><h3>이렇게 바꿔 보면 어떨까요</h3><span class="badge badge--ai">AI가 만든 문장</span></div>
+        <p class="prose" id="guide-suggest"></p>
+      </div>
+    </div>
+    <div class="dialog__foot">
+      <button class="btn btn--brand btn--lg" id="use-suggest" type="button">제안대로 고치기</button>
+      <div class="guide__pair">
+        <button class="btn btn--lg" id="self-edit" type="button">직접 고치기</button>
+        <button class="btn btn--lg btn--ghost" id="send-as-is" type="button">그대로 제출</button>
+      </div>
+      <p class="small muted center">그대로 제출하면 일부 표현은 가려진 채 담당자에게 전달됩니다.</p>
+    </div>
+  </dialog>
+
+  <script type="module" src="/assets/citizen.js"></script>
+</body>
+</html>
