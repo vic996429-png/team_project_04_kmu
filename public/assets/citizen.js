@@ -13,11 +13,8 @@ seedIfEmpty();
     const period = info.period ? info.period.replace(/이며,?\s*/, ', ').replace(/있다\.?$/, '있습니다') : null;
     if (period) {
       document.querySelector('#period-line').textContent = `처리 기간은 ${period}.`;
-      document.querySelector('#done-period').textContent = period;
     }
     if (info.contact) document.querySelector('#done-contact').textContent = `${info.contact.dept} ${info.contact.tel}`;
-    const checked = (info.source.checked.match(/\d{4}-\d{2}-\d{2}/) || [])[0];
-    document.querySelector('#done-source').textContent = `출처: ${info.source.doc}${checked ? `(${checked} 확인)` : ''}`;
   } catch {
     document.querySelector('#period-line').textContent = '처리 기간은 성북구청 누리집 안내를 확인해 주세요.';
   }
@@ -178,9 +175,7 @@ function finish(c, maskedNotice = false) {
   $('#write-card').closest('.citizen__grid').hidden = true;
   $('#done').hidden = false;
   $('#done-id').textContent = c.id;
-  $('#done-msg').textContent = (maskedNotice ? '일부 표현은 가려진 채 담당자에게 전달됩니다. ' : '')
-    + '처리 상태는 접수번호로 「처리 상태」 화면에서 확인할 수 있습니다.';
-  $('#go-status').href = `/status?id=${encodeURIComponent(c.id)}`;
+  $('#done-masked').textContent = maskedNotice ? '일부 표현은 가려진 채 담당자에게 전달됩니다. ' : '';
   window.scrollTo({ top: 0 });
   // H8: 작성 영역이 사라지므로 완료 제목으로 초점을 옮겨 화면낭독기가 결과를 읽게 한다
   $('#done-title').focus();
