@@ -172,3 +172,29 @@ html[data-font="xl"] body { zoom: 1.25; }
 .mascot-fig { margin: 0 0 var(--x3); text-align: center; }
 .mascot-fig img { width: 160px; height: auto; }
 .mascot-fig--right { float: right; margin: 0 0 var(--x2) var(--x4); }
+
+/* ── 안내 챗봇 ─────────────────────────────── */
+.chat-fab { position: fixed; right: var(--x4); bottom: var(--x4); z-index: 40; min-height: 48px; padding: 0 var(--x5); border: 0; border-radius: var(--full); background: var(--sb-head); color: #fff; font: var(--t4); font-weight: 700; cursor: pointer; box-shadow: var(--s2); }
+.chat-fab:hover { opacity: .92; }
+.chat { position: fixed; right: var(--x4); bottom: 76px; z-index: 40; width: min(380px, calc(100vw - 32px)); max-height: min(560px, calc(100vh - 110px)); display: flex; flex-direction: column; background: var(--bg-layer-default); border: 1px solid var(--stroke-neutral-muted); border-radius: var(--r4); box-shadow: var(--s2); overflow: hidden; }
+.chat__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--x1) var(--x2); padding: var(--x3) var(--x4); background: var(--sb-head); color: #fff; }
+.chat__sub { font: var(--t2); color: #e6eefb; flex: 1 1 100%; }
+.chat__close { margin-left: auto; position: absolute; right: var(--x3); top: var(--x2); border: 0; background: transparent; color: #fff; font: var(--t3); cursor: pointer; text-decoration: underline; }
+.chat__log { flex: 1; overflow-y: auto; padding: var(--x3) var(--x4); display: flex; flex-direction: column; gap: var(--x2); min-height: 160px; }
+.chat__msg { max-width: 92%; padding: var(--x2) var(--x3); border-radius: var(--r3); font: var(--t4); }
+.chat__msg p { margin: 0; }
+.chat__msg p + p, .chat__msg p + blockquote { margin-top: var(--x2); }
+.chat__msg--bot { background: var(--bg-neutral-weak); align-self: flex-start; }
+.chat__msg--me { background: var(--bg-brand-weak); color: var(--fg-brand-text); align-self: flex-end; }
+.chat__tag, .chat__src { font: var(--t3) !important; color: var(--fg-neutral-subtle); }
+.chat__quote { margin: 0; padding: var(--x2) var(--x3); border-left: 3px solid var(--lime-500); background: var(--bg-layer-default); font: var(--t3); }
+.chat__quote strong { display: block; margin-bottom: var(--x1); }
+.chat__chips { display: flex; flex-wrap: wrap; gap: var(--x1_5); padding: 0 var(--x4) var(--x2); }
+.chat__chip { border: 1px solid var(--stroke-neutral-weak); background: var(--bg-layer-default); border-radius: var(--full); padding: var(--x1) var(--x3); font: var(--t3); cursor: pointer; }
+.chat__chip:hover { background: var(--bg-brand-weak); }
+.chat__form { display: flex; gap: var(--x2); padding: var(--x3) var(--x4); border-top: 1px solid var(--stroke-neutral-muted); }
+.chat__form input { flex: 1; min-width: 0; min-height: 40px; padding: 0 var(--x3); border: 1px solid var(--stroke-input); border-radius: var(--r2); background: var(--bg-layer-default); }
+.chat__send { min-height: 40px; padding: 0 var(--x4); border: 0; border-radius: var(--full); background: var(--bg-brand-solid); color: var(--fg-on-brand); font-weight: 700; cursor: pointer; }
+.chat__send:disabled { opacity: .5; cursor: default; }
+html[data-font="l"] .chat, html[data-font="xl"] .chat { zoom: 1; }
+@media (max-width: 767px) { .chat { right: var(--x2); bottom: 72px; width: calc(100vw - 16px); } .chat-fab { right: var(--x2); bottom: var(--x2); } }
