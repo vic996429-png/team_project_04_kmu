@@ -42,3 +42,5 @@
   .citizen__side { position: static; order: -1; }
   .tryit { display: none; }
 }
+
+.side-mascot { width: 100%; height: auto; border-radius: var(--r3); background: #fff; display: block; }

@@ -10,7 +10,7 @@
 <body>
   <header class="topbar">
     <div class="topbar__inner">
-      <a class="brand" href="/"><span class="brand__mark" aria-hidden="true">성북</span>안심 민원 필터 <small>시제품</small></a>
+      <a class="brand" href="/"><img class="brand__logo" src="/assets/img/sb-logo.png" alt="성북구"><span class="brand__sep" aria-hidden="true"></span>안심 민원 필터 <small>시제품</small></a>
       <nav class="nav" aria-label="화면 이동">
         <a href="/" aria-current="page">민원 쓰기</a>
         <a href="/status">처리 상태</a>
@@ -22,8 +22,11 @@
 
   <main class="page citizen">
     <div class="page-head">
-      <h1>구청장에게 바란다</h1>
-      <p>성북구청에 바라는 점이나 불편한 점을 적어 주세요. <span id="period-line"></span></p>
+      <div class="page-head__text">
+        <h1>구청장에게 바란다</h1>
+        <p>성북구청에 바라는 점이나 불편한 점을 적어 주세요. <span id="period-line"></span></p>
+      </div>
+      <img class="page-head__img" src="/assets/img/mascot-headset.png" alt="헤드셋을 쓴 쨕쨕이와 감탄이">
     </div>
 
     <div class="citizen__grid">
@@ -63,6 +66,7 @@
       </section>
 
       <aside class="citizen__side" aria-label="이용 안내">
+        <img class="side-mascot" src="/assets/img/mascot-banner.png" alt="쨕쨕이: 성북을 꼼꼼하게 살피는 참새, 감탄이: 성북의 좋은 소식에 감동을 더하는 감">
         <div class="callout callout--brand notice">
           <div>
             <p><b>AI가 표현을 살펴봅니다</b></p>
@@ -129,5 +133,11 @@
   </dialog>
 
   <script type="module" src="/assets/citizen.js"></script>
+  <footer class="site-foot">
+    <div class="site-foot__inner">
+      <img src="/assets/img/slogan.png" alt="성북의 미래 현장에서 답을 찾다">
+      <p>성북 안심 민원 필터 시제품 · 쨕쨕이와 감탄이가 함께합니다.</p>
+    </div>
+  </footer>
 </body>
 </html>
