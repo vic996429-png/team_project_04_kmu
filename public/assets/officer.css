@@ -1,6 +1,6 @@
 .wide { max-width: 1280px; }
 .page-head.row { align-items: flex-end; }
-.board { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: var(--x3); align-items: start; }
+.board { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--x8, 48px); align-items: start; }
 .board__list { position: sticky; top: 76px; max-height: calc(100vh - 92px); overflow: auto; }
 .board__list { padding: var(--x3); }
 .board__list .seg { display: grid; grid-template-columns: 1fr 1fr; border-radius: var(--r3); }
@@ -66,3 +66,44 @@
 .input--sm, .select--sm { padding: var(--x2) var(--x3); font: var(--t3); min-width: 0; }
 .list { max-height: calc(100vh - 260px); overflow: auto; }
 .keys { margin: var(--x2) 0 0; } kbd { border: 1px solid var(--stroke-neutral-weak); border-bottom-width: 2px; border-radius: var(--r1); padding: 0 5px; font: var(--t2); background: var(--bg-layer-default); }
+
+/* ── 깔끔한 현황판 ─────────────────── */
+.page.wide { padding-top: var(--x5); }
+#tabs.seg { display: flex; gap: var(--x2); padding: 0; background: transparent; border-radius: 0; margin: 0 0 var(--x6, 28px); flex-wrap: wrap; }
+#tabs.seg button { flex: 0 0 auto; padding: var(--x2) var(--x4); min-height: 40px; border-radius: var(--full); background: #fff; box-shadow: inset 0 0 0 1px var(--stroke-neutral-weak); color: var(--fg-neutral); font-size: 15px; }
+#tabs.seg button[aria-selected="true"] { background: var(--bg-neutral-inverted); color: var(--fg-neutral-inverted); box-shadow: none; }
+#tabs.seg button[aria-selected="true"] .count { color: inherit; }
+#tabs.seg .count { margin-left: var(--x1); }
+.dot--none { background: var(--gray-400, #aaa); }
+
+.board__list { position: static; max-height: none; overflow: visible; padding: 0; background: none; }
+.tools { margin: 0 0 var(--x2); }
+.list { margin: 0; gap: 0; max-height: none; border-bottom: 1px solid var(--stroke-neutral-subtle); }
+.item { grid-template-columns: 96px minmax(0, 1fr) auto; align-items: start; gap: var(--x3); padding: var(--x4) var(--x3); border-radius: 0; border-top: 1px solid var(--stroke-neutral-subtle); }
+.item[aria-selected="true"] { background: var(--bg-layer-fill); box-shadow: none; }
+.item__stage { display: inline-flex; align-items: center; gap: var(--x2); font: var(--t3); font-weight: 700; padding-top: 2px; }
+.stage--review { color: var(--fg-warning-contrast); } .stage--block { color: var(--fg-critical-contrast); } .stage--normal { color: var(--fg-neutral); }
+.item__main { display: grid; gap: var(--x1); min-width: 0; }
+.item__side { display: grid; justify-items: end; gap: var(--x1_5); font: var(--t2); color: var(--fg-neutral-subtle); }
+.pill { display: inline-flex; padding: 2px var(--x3); border-radius: var(--full); font: var(--t2); font-weight: 700; background: #fff; box-shadow: inset 0 0 0 1px var(--stroke-neutral-weak); color: var(--fg-neutral); }
+.pill--dark { background: var(--bg-neutral-inverted); color: var(--fg-neutral-inverted); box-shadow: none; }
+
+.board__detail { padding: 0; background: none; box-shadow: none; }
+.d-head { border-bottom: 0; padding-bottom: var(--x4); }
+.d-titlerow { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--x3); }
+.d-stages { display: flex; align-items: center; gap: var(--x2); flex-shrink: 0; }
+.d-head h2 { font-size: 26px; }
+.blk { padding: var(--x4) var(--x5); border-radius: var(--r2); background: var(--bg-layer-fill); margin-bottom: var(--x2); }
+.blk__top { display: flex; justify-content: space-between; font: var(--t2); color: var(--fg-neutral-subtle); margin-bottom: var(--x3); }
+.blk .summary, .blk .softened { font: var(--t4); font-weight: 400; background: none; padding: 0; margin: 0; line-height: 1.7; }
+.versus { gap: var(--x2); }
+.versus > div { border-radius: var(--r2); padding: var(--x4) var(--x5); }
+.d-foot { margin: var(--x3) 0 var(--x2); }
+.d-sec { border-bottom: 0; padding: var(--x3) 0; }
+.d-sec h3 { font-size: 13px; }
+.d-fold > summary { cursor: pointer; font: var(--t3); font-weight: 700; color: var(--fg-neutral-subtle); }
+.d-fold[open] > summary { margin-bottom: var(--x3); }
+.veil { border-radius: var(--r2); }
+#reveal { background: var(--bg-neutral-weak); color: var(--fg-neutral); }
+
+@media (max-width: 1199px) { .board { grid-template-columns: minmax(0, 1fr); } }

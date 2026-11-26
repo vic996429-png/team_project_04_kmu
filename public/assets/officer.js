@@ -13,13 +13,14 @@ let selected = location.hash.slice(1) || null;
 
 $('#manual-flag').hidden = !isManual();
 
+const DOT = { 정상: 'normal', 검토필요: 'review', 차단후보: 'block', 'AI 미표시': 'none' };
 function bucket(c) { return effectiveStage(c) || 'AI 미표시'; }
 
 function renderTabs() {
   const all = getComplaints();
   $('#tabs').innerHTML = TABS.map((t) => {
     const n = all.filter((c) => bucket(c) === t).length;
-    return `<button role="tab" aria-selected="${t === tab}" data-tab="${t}">${t === '정상' || t === 'AI 미표시' ? '' : `<span class="dot dot--${t === '검토필요' ? 'review' : 'block'}" aria-hidden="true"></span>`}${t}<span class="count">${n}</span></button>`;
+    return `<button role="tab" aria-selected="${t === tab}" data-tab="${t}"><span class="dot dot--${DOT[t]}" aria-hidden="true"></span>${t}<span class="count">${n}</span></button>`;
   }).join('');
 }
 
@@ -41,14 +42,15 @@ function renderList() {
   if (!items.length) { $('#list').innerHTML = `<li class="empty">${esc(tab)} 민원이 없습니다.</li>`; return; }
   $('#list').innerHTML = items.map((c) => `
     <li class="item" role="option" tabindex="0" aria-selected="${c.id === selected}" data-id="${esc(c.id)}">
-      <div class="item__top"><span>${esc(c.id)}</span><span>${fmt(c.createdAt)}</span></div>
-      <div class="item__title">${taped(safeTitleOf(c))}</div>
-      <div class="item__sum">${taped(c.summary || '(AI 요약 없음 — 원문 확인 필요)')}</div>
-      <div class="item__tags">
-        ${c.officerStage ? '<span class="badge">담당자 확정</span>' : '<span class="badge badge--demo">확정 전</span>'}
-        ${dday(c)}
-        ${c.seed ? '<span class="badge badge--demo">가상 예시</span>' : ''}
-        ${c.guideShown ? `<span class="badge">${esc(c.citizenChoice)}</span>` : ''}
+      <span class="item__stage stage--${DOT[bucket(c)]}"><span class="dot dot--${DOT[bucket(c)]}" aria-hidden="true"></span>${esc(bucket(c))}</span>
+      <div class="item__main">
+        <div class="item__title">${taped(safeTitleOf(c))}</div>
+        <div class="item__sum">${taped(c.summary || '(AI 요약 없음 — 원문 확인 필요)')}</div>
+      </div>
+      <div class="item__side">
+        <span class="item__date">${fmt(c.createdAt)}</span>
+        <span class="pill">${c.officerStage ? '확정' : '확인 전'}</span>
+        ${c.seed ? '<span class="pill">가상 예시</span>' : ''}
       </div>
     </li>`).join('');
 }
@@ -81,17 +83,26 @@ function renderDetail() {
   const typeText = Object.entries(byType).map(([t, n]) => `${t} ${n}건`).join(' · ') || `${terms.length}건`;
   box.innerHTML = `
     <div class="d-head">
-      <div class="d-meta"><span>${esc(c.id)}</span><span>${esc(c.category)}</span><span>${fmt(c.createdAt)} 접수</span></div>
-      <h2>${taped(safeTitleOf(c))}</h2>
-      <div class="row">
-        <span class="small muted">AI 표시</span> ${stageBadge(c.stage)}
-        ${c.officerStage ? `<span class="small muted">담당자 확정</span> ${stageBadge(c.officerStage)}` : ''}
-        ${c.guideShown ? `<span class="badge">민원인: ${esc(c.citizenChoice)}</span>` : ''}
+      <div class="d-meta">${fmt(c.createdAt)} 접수 · ${esc(c.id)} · ${esc(c.category)}</div>
+      <div class="d-titlerow">
+        <h2>${taped(safeTitleOf(c))}</h2>
+        <div class="d-stages">
+          ${stageBadge(eff || c.stage)}
+          ${c.officerStage ? '<span class="pill pill--dark">담당자 확정</span>' : ''}
+        </div>
       </div>
+      ${c.guideShown ? `<p class="small muted">민원인: ${esc(c.citizenChoice)}</p>` : ''}
     </div>
 
-    ${c.summary ? `<div class="d-sec"><h3>핵심 요약 ${aiTag}</h3><p class="summary">${taped(c.summary)}</p></div>` : ''}
-    ${c.softened && c.stage !== '정상' && (c.aiGenerated || c.seed) ? `<div class="d-sec"><h3>순화본 ${aiTag}</h3><p class="softened prose">${taped(c.softened)}</p></div>` : ''}
+    ${c.softened && c.stage !== '정상' && (c.aiGenerated || c.seed) ? `<div class="blk"><div class="blk__top"><span>순화본</span><span>${c.aiGenerated ? 'AI가 만든 문장' : '가상 예시'}</span></div><p class="softened prose">${taped(c.softened)}</p></div>` : ''}
+    ${c.summary ? `<div class="blk"><div class="blk__top"><span>핵심 요약</span><span>${c.aiGenerated ? 'AI가 만든 문장' : '가상 예시'}</span></div><p class="summary">${taped(c.summary)}</p></div>` : ''}
+
+    ${c.stage ? `<div class="versus">
+      <div><h4>AI 판단 이유${c.stage ? ` · ${esc(c.stage)}` : ''}</h4><p>${esc(c.reason || '—')}</p></div>
+      <div><h4>정상 민원일 수 있는 근거</h4><p>${esc(c.normalReason || '—')}</p></div>
+    </div>` : ''}
+
+    <p class="d-foot small muted">1차 표현 목록: ${c.lexiconStage ? esc(c.lexiconStage) : '—'}${c.provider && !c.demo ? ` · 2차 AI: ${esc(c.provider)} · ${esc(c.model)}` : ''}</p>
 
     <div class="d-sec">
       <h3>원문</h3>
@@ -105,22 +116,15 @@ function renderDetail() {
       ${c.firstText ? `<p class="small muted">민원인이 안내 창을 보고 고쳐 낸 글입니다(${esc(c.citizenChoice)}).</p>` : ''}
     </div>
 
-    ${c.stage ? `<div class="d-sec">
-      <div class="versus">
-        <div><h4>AI 판단 이유</h4><p>${esc(c.reason || '—')}</p></div>
-        <div><h4>정상 민원일 수 있는 근거</h4><p>${esc(c.normalReason || '—')}</p></div>
-      </div>
-    </div>` : ''}
-
-    <div class="d-sec">
-      <h3>판단 경로</h3>
+    <details class="d-sec d-fold">
+      <summary>판단 경로</summary>
       <div class="path">
         <div class="path__row"><span>1차 표현 목록</span><div class="row">${c.lexiconStage ? stageBadge(c.lexiconStage) : '—'} ${terms.length ? `<span class="muted" id="terms">${open ? terms.map(esc).join(', ') : `${esc(typeText)} · 단어는 원문 보기 뒤 표시`}</span>` : ''}</div></div>
         <div class="path__row"><span>2차 AI</span><div class="row">${aiLine(c)}</div></div>
         ${c.tried?.length ? `<div class="path__row"><span>AI 호출 순서</span>${triedChips(c)}</div>` : ''}
         <div class="path__row"><span>결합 규칙</span><span class="muted">두 결과가 같으면 그 단계, 다르면 검토필요</span></div>
       </div>
-    </div>
+    </details>
 
     ${c.stage ? `<div class="d-sec">
       <h3>판단 근거 <span class="badge">답변참고문서 대조</span></h3>
