@@ -58,9 +58,6 @@ let pending = null;      // 안내 창을 띄운 민원
 let revision = null;     // '제안대로 고치기' | '직접 고치기' — 고친 글은 안내 창 없이 접수
 let firstText = null;    // 고치기 전 글
 
-$('#agree-required').addEventListener('change', (e) => {
-  if (e.target.checked) { $('#consent-err').textContent = ''; e.target.removeAttribute('aria-invalid'); }
-});
 text.addEventListener('input', () => { $('#count').textContent = text.value.length.toLocaleString(); $('#text-err').textContent = ''; });
 document.querySelectorAll('[data-sample]').forEach((b) => b.addEventListener('click', () => {
   const [t, c, body] = SAMPLES[b.dataset.sample];
@@ -84,22 +81,11 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
   if (!title.value.trim()) { title.focus(); snackbar('제목을 적어 주세요.'); return; }
   if (!text.value.trim()) { $('#text-err').textContent = '내용을 적어 주세요.'; text.focus(); return; }
-  // H6: 필수 동의가 없으면 접수하지 않는다(입력란 옆에 이유를 남김)
-  const agreeReq = $('#agree-required');
-  if (!agreeReq.checked) {
-    $('#consent-err').textContent = '개인정보 수집·이용(필수)에 동의해야 이 화면으로 접수할 수 있습니다.';
-    agreeReq.setAttribute('aria-invalid', 'true');
-    agreeReq.focus();
-    return;
-  }
-  const aiConsent = $('#agree-ai').checked;
+  const aiConsent = true;
   const base = { title: title.value.trim(), category: category.value, original: text.value.trim(), aiConsent };
 
   if (isManual()) { // 관리자가 AI 표시를 멈춘 동안은 AI 없이 바로 접수
     return finish(addComplaint({ ...base, masked: null, stage: null, manual: true, citizenChoice: revision || '바로 접수' }));
-  }
-  if (!aiConsent) { // AI 살펴보기에 동의하지 않으면 외부 AI 로 보내지 않고 바로 접수
-    return finish(addComplaint({ ...base, masked: null, stage: null, citizenChoice: '바로 접수' }));
   }
 
   busy(true);
