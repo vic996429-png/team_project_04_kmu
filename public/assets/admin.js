@@ -8,7 +8,7 @@ const pct = (a, b) => (b ? `${Math.round((a / b) * 1000) / 10}%` : '—');
 function renderSwitch() {
   const on = !isManual();
   $('#ai-on').checked = on;
-  $('#ai-on-label').textContent = on ? '켜짐' : '꺼짐(수동 처리)';
+  $('#ai-on-label').textContent = on ? 'AI 표시 켜짐' : 'AI 표시 일시 중지 (수동 모드)';
   $('#manual-desc').textContent = on
     ? '민원 접수 때 AI가 단계를 표시합니다. 끄면 새 민원은 AI 표시 없이 담당자에게 갑니다.'
     : 'AI 표시를 멈춘 상태입니다. 새 민원은 「AI 미표시」로 담당자 현황판에 들어갑니다.';
@@ -55,29 +55,14 @@ function renderStats() {
   const by = (s) => marked.filter((c) => c.stage === s).length;
   const decided = list.filter((c) => c.officerStage && c.stage);
   const changed = decided.filter((c) => c.officerStage !== c.stage);
-  const shown = list.filter((c) => c.guideShown);
-  const revised = shown.filter((c) => c.citizenChoice === '제안대로 고치기' || c.citizenChoice === '직접 고치기');
   const tiles = [
     ['전체 접수', list.length, `AI 미표시 ${list.length - marked.length}건`],
     ['<span class="dot dot--normal"></span>정상', by('정상'), 'AI 표시 기준'],
     ['<span class="dot dot--review"></span>검토필요', by('검토필요'), 'AI 표시 기준'],
     ['<span class="dot dot--block"></span>차단후보', by('차단후보'), 'AI 표시 기준'],
     ['판단 변경률', pct(changed.length, decided.length), `변경 ${changed.length} ÷ 담당자 판단 ${decided.length}`],
-    ['수정 수용률', pct(revised.length, shown.length), `고쳐 냄 ${revised.length} ÷ 안내 창 ${shown.length}`],
   ];
   $('#stats').innerHTML = tiles.map(([l, v, n]) => `<div class="stat"><span class="stat__label">${l}</span><span class="stat__value">${v}</span><span class="stat__note">${n}</span></div>`).join('');
-
-  $('#mis').innerHTML = changed.length
-    ? `<ul class="mis">${changed.map((c) => `<li><a href="/officer#${esc(c.id)}">${esc(safeTitleOf(c))}</a><div class="row">AI ${stageBadge(c.stage)} → 담당자 ${stageBadge(c.officerStage)}</div><span class="muted">${esc(c.officerReason || '')}</span></li>`).join('')}</ul>`
-    : '<p class="small muted">아직 없습니다. 담당자 현황판에서 단계를 바꾸면 여기에 모입니다.</p>';
-
-  const count = {};
-  for (const c of list) {
-    const k = c.seed ? '시연 데이터' : c.provider || (c.manual ? 'AI 중지 중' : c.aiConsent === false ? 'AI 미동의' : c.stage ? '시연 값(AI 실패)' : 'AI 연결 실패');
-    count[k] = (count[k] || 0) + 1;
-  }
-  const max = Math.max(1, ...Object.values(count));
-  $('#providers').innerHTML = `<div class="bars">${Object.entries(count).map(([k, n]) => `<div class="bar"><span>${esc(k)}</span><span class="bar__track"><span class="bar__fill" style="width:${(n / max) * 100}%"></span></span><span class="num">${n}건</span></div>`).join('')}</div>`;
 }
 
 function renderLog() {
@@ -85,33 +70,35 @@ function renderLog() {
   $('#integrity').innerHTML = v.ok ? '<span class="badge badge--normal">지문 일치</span>' : `<span class="badge badge--block">${v.at}번째 줄부터 변조 의심</span>`;
   const rows = getLog().slice(-50).reverse();
   $('#log').innerHTML = rows.map((r) => `<tr>
-    <td class="num">${r.seq}</td><td class="num">${fmt(r.at)}</td><td>${esc(r.complaintId || '—')}</td><td>${esc(r.actor)}</td>
+    <td class="num">${fmt(r.at)}</td><td class="num">${esc(r.complaintId || '—')}</td>
+    <td>${r.fromStage ? stageBadge(r.fromStage) : '—'}</td><td>${r.toStage ? stageBadge(r.toStage) : '—'}</td>
     <td>${esc(r.action)}${r.choice ? ` · ${esc(r.choice)}` : ''}</td>
-    <td>${r.fromStage ? `${esc(r.fromStage)} → ` : ''}${r.toStage ? esc(r.toStage) : ''}</td>
-    <td>${esc(r.reason || '')}${r.provider ? `${esc(r.provider)}${r.model ? ` · ${esc(r.model)}` : ''}` : ''}</td>
+    <td>${esc(r.reason || '-')}</td><td>${esc(r.provider || '')}</td>
   </tr>`).join('') || '<tr><td colspan="7" class="muted">이력이 없습니다.</td></tr>';
+}
+
+const tag = (r) => (r.live ? '<span class="badge badge--live">실시간</span>' : `<span class="badge badge--demo">시연 값</span> <span class="small muted">${esc(r.reason || '')}${r.detail ? ` · ${esc(r.detail)}` : ''}</span>`);
+
+async function renderLawmaking() {
+  try {
+    const r = await api('/api/lawmaking?q=민원');
+    const rows = r.live ? r.items : r.demo;
+    $('#lawmaking').innerHTML = `<div class="row" style="margin-bottom:10px">${tag(r)}</div>` + (rows.length
+      ? rows.map((i) => `<div class="notice-card"><b>${esc(i.lsNm)}</b><span class="muted">${esc(i.asndOfiNm || '')} · ${esc(i.stYd || '')} ~ ${esc(i.edYd || '')}${i.status ? ` · ${esc(i.status)}` : ''}</span>${i.link ? `<a href="${esc(i.link)}" target="_blank" rel="noopener">원문 열기</a>` : ''}</div>`).join('')
+      : '<p class="small muted">진행 중인 입법예고가 없습니다.</p>');
+  } catch (e) {
+    $('#lawmaking').innerHTML = `<p class="err">불러오지 못했습니다: ${esc(e.message)}</p>`;
+  }
 }
 
 async function renderTrend() {
   try {
     const r = await api('/api/trend');
-    const head = r.live ? '<span class="badge badge--live">실시간</span>' : `<span class="badge badge--demo">시연 값</span> <span class="small muted">${esc(r.reason)}${r.detail ? ` · ${esc(r.detail)}` : ''}</span>`;
-    if (r.live) { $('#trend').innerHTML = `<div class="row">${head}</div><pre class="small">${esc(JSON.stringify(r.raw, null, 2).slice(0, 1200))}</pre>`; return; }
-    const max = Math.max(...r.demo.items.map((i) => i.count));
-    $('#trend').innerHTML = `<div class="row" style="margin-bottom:12px">${head}</div>
-      <div class="bars">${r.demo.items.map((i) => `<div class="bar"><span>${esc(i.label)}</span><span class="bar__track"><span class="bar__fill" style="width:${(i.count / max) * 100}%"></span></span><span class="num">${i.count}</span></div>`).join('')}</div>
-      <p class="small muted">${esc(r.demo.note)} · ${esc(r.demo.period)}</p>`;
+    if (r.live) { $('#trend').innerHTML = `<div class="row">${tag(r)}</div><pre class="small">${esc(JSON.stringify(r.raw, null, 2).slice(0, 800))}</pre>`; return; }
+    $('#trend').innerHTML = `<div class="row" style="margin-bottom:10px">${tag(r)}</div>
+      <ul class="kw">${r.demo.items.map((i) => `<li>${esc(i.label)} <span class="muted">${i.count}</span></li>`).join('')}</ul>`;
   } catch (e) {
     $('#trend').innerHTML = `<p class="err">불러오지 못했습니다: ${esc(e.message)}</p>`;
-  }
-}
-
-async function renderKeys() {
-  try {
-    const { keys } = await api('/api/status');
-    $('#keys').innerHTML = keys.map((k) => `<tr><td><code>${esc(k.env)}</code></td><td>${esc(k.use)}</td><td>${k.set ? '<span class="badge badge--normal">값 있음</span>' : '<span class="badge badge--demo">비어 있음</span>'}</td></tr>`).join('');
-  } catch (e) {
-    $('#keys').innerHTML = `<tr><td colspan="3" class="err">서버에 연결하지 못했습니다: ${esc(e.message)}</td></tr>`;
   }
 }
 
@@ -124,6 +111,6 @@ $('#reset').addEventListener('click', () => {
 
 function renderAll() { renderSwitch(); renderStats(); renderLog(); }
 renderAll();
+renderLawmaking();
 renderTrend();
-renderKeys();
 window.addEventListener('storage', renderAll);
