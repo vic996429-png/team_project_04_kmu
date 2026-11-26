@@ -23,23 +23,19 @@
     </div>
   </header>
 
-  <main id="main" class="page">
-    <div class="page-head page-head--work">
-      <h1>관리·감독</h1>
-      <p>부서 관리자·감사 담당용 화면입니다. AI 판단이 담당자 판단과 얼마나 다른지 보고, 이상하면 AI 표시를 멈춥니다.</p>
-    </div>
-
-    <section class="card card--accent switch-card">
+  <main id="main" class="page wide admin">
+    <div class="admin__head">
       <div>
-        <h2 id="ai-title">AI 표시</h2>
+        <p class="eyebrow">통계·감독</p>
+        <h1>분류 현황과 판단 이력</h1>
         <p class="small muted" id="manual-desc"></p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="ai-on" role="switch" aria-labelledby="ai-title" aria-describedby="manual-desc">
+        <input type="checkbox" id="ai-on" role="switch" aria-describedby="manual-desc">
         <span class="switch__track" aria-hidden="true"><span class="switch__thumb"></span></span>
-        <span id="ai-on-label" aria-hidden="true"></span>
+        <span id="ai-on-label">AI 표시</span>
       </label>
-    </section>
+    </div>
 
     <dialog class="dialog" id="ai-dialog" aria-labelledby="ai-dialog-title">
       <form method="dialog" id="ai-form">
@@ -62,55 +58,26 @@
       </form>
     </dialog>
 
-    <section class="card">
-      <h2>지표 <span class="small muted">· 이 브라우저에 쌓인 시연 데이터 기준</span></h2>
-      <div class="stats" id="stats"></div>
-      <p class="small muted">목표 수치는 근거 자료가 없어 정하지 않았습니다(기획서 3.7). 잰 값만 보여 줍니다. 지표의 계산 방법은 <a href="/about#kpi">서비스 소개 · 성과지표 정의</a>에 있습니다.</p>
-    </section>
+    <div class="stats" id="stats"></div>
 
-    <div class="two">
-      <section class="card">
-        <h2>오분류 사례 <span class="small muted">· 담당자가 AI 단계를 바꾼 민원</span></h2>
-        <div id="mis"></div>
+    <div class="admin__grid">
+      <section class="card" aria-labelledby="log-title">
+        <h2 id="log-title">판단 이력</h2>
+        <p class="small muted">기록은 추가만 되고 고칠 수 없어요. 입력은 개인정보를 가린 글만 남깁니다. <span id="integrity"></span></p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>시각</th><th>접수번호</th><th>AI 단계</th><th>최종 단계</th><th>처리</th><th>사유</th><th>AI</th></tr></thead>
+          <tbody id="log"></tbody>
+        </table></div>
       </section>
-      <section class="card">
-        <h2>답한 AI</h2>
-        <div id="providers"></div>
-      </section>
-    </div>
 
-    <section class="card">
-      <div class="row">
-        <h2 style="margin:0">판단 이력</h2>
-        <span id="integrity"></span>
-        <div class="spacer"></div>
-        <span class="small muted">덧붙이기만 되고 고칠 수 없습니다. 최근 50건</span>
-      </div>
-      <div class="table-wrap"><table>
-        <thead><tr><th>#</th><th>시각</th><th>민원</th><th>누가</th><th>무엇을</th><th>단계</th><th>사유·AI</th></tr></thead>
-        <tbody id="log"></tbody>
-      </table></div>
-    </section>
-
-    <div class="two">
-      <section class="card">
-        <h2>민원 키워드 동향 <span class="small muted">· 국민권익위원회 민원빅데이터</span></h2>
+      <aside class="card admin__side" aria-label="참고 정보">
+        <h2>진행 중인 입법예고</h2>
+        <div id="lawmaking"><div class="skel"></div></div>
+        <h2 class="admin__sub">민원 키워드 (공공데이터)</h2>
         <div id="trend"><div class="skel"></div><div class="skel"></div></div>
-      </section>
-      <section class="card">
-        <h2>연결 상태</h2>
-        <p class="small muted">키 값은 보여 주지 않고, 들어 있는지만 확인합니다.</p>
-        <div class="table-wrap"><table><thead><tr><th>키 이름</th><th>쓰는 곳</th><th>상태</th></tr></thead><tbody id="keys"></tbody></table></div>
-      </section>
+        <button class="btn btn--ghost" id="reset" type="button">시연 데이터 처음으로 되돌리기</button>
+      </aside>
     </div>
-
-    <section class="card reset">
-      <div>
-        <h2>시연 데이터 초기화 <span class="badge">시연 전용</span></h2>
-        <p class="small muted">이 브라우저의 민원 목록을 기획서 표 2의 [가상 예시] 10건으로 되돌립니다. 판단 이력은 지우지 않고 「시연 데이터 초기화」 줄을 남깁니다.</p>
-      </div>
-      <button class="btn btn--ghost" id="reset" type="button">초기화</button>
-    </section>
   </main>
 
   <script type="module" src="/assets/admin.js"></script>

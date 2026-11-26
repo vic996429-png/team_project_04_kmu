@@ -33,3 +33,19 @@
   .two { grid-template-columns: 1fr; }
   .switch-card, .reset { flex-direction: column; align-items: flex-start; }
 }
+
+/* ── 관리·감독: 지표 카드 + 이력 표 + 참고 정보 ── */
+.admin__head { padding-top: var(--x3); display: flex; justify-content: space-between; align-items: flex-start; gap: var(--x4); margin-bottom: var(--x5); }
+.admin__head h1 { margin: 0 0 var(--x1); }
+.eyebrow { margin: 0 0 var(--x1); font: var(--t3); font-weight: 700; color: var(--fg-brand-text); }
+.stats { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--x3); margin-bottom: var(--x4); }
+.stat { background: var(--bg-layer-default); border-radius: var(--r4); padding: var(--x4); box-shadow: 0 0 0 1px var(--stroke-neutral-subtle); align-content: start; min-height: 112px; }
+.stat__value { color: var(--fg-neutral); }
+.admin__grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: var(--x3); align-items: start; }
+.admin__grid .card { margin: 0; }
+.admin__sub { margin-top: var(--x6, 28px) !important; }
+.admin__side .notice-card { padding: var(--x3); border-radius: var(--r2); background: var(--bg-layer-fill); font: var(--t3); display: grid; gap: var(--x1); margin-bottom: var(--x2); }
+.admin__side .btn { margin-top: var(--x6, 28px); }
+.kw { margin: 0; padding-left: var(--x5); display: grid; gap: var(--x1); font: var(--t4); }
+@media (max-width: 1199px) { .admin__grid { grid-template-columns: 1fr; } .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 767px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .admin__head { flex-direction: column; } }
