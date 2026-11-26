@@ -1,0 +1,4 @@
+.home { max-width: 720px; }
+.home__mascot { max-width: 420px; margin: 0 auto var(--x4); }
+.home__notices { display: grid; gap: var(--x3); }
+.home__cta { margin: var(--x5) 0 0; text-align: center; }
