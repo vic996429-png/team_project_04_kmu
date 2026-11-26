@@ -38,7 +38,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 /* 하단 로고 띠 */
 .site-foot { background: #fff; border-top: 4px solid var(--lime-500); padding: var(--x6) var(--x4); }
 .site-foot__inner { max-width: 1040px; margin: 0 auto; display: flex; align-items: center; gap: var(--x6); flex-wrap: wrap; }
-.site-foot__inner img { height: 64px; width: auto; }
+.site-foot__inner img { height: 64px; width: auto; flex: none; }
 .site-foot__inner p { margin: 0; font: var(--t3); color: var(--fg-neutral-subtle); }
 .card { background: var(--bg-layer-default); border-radius: var(--r4); padding: var(--x5); }
 .card + .card { margin-top: var(--x3); }
@@ -163,3 +163,12 @@ html[data-font="xl"] body { zoom: 1.25; }
 @media (max-width: 767px) { .nav { order: 3; } .fsz { margin-left: auto; } }
 .nav a { white-space: nowrap; }
 @media (max-width: 767px) { .side-mascot { display: none; } .nav { flex-wrap: nowrap; } }
+
+/* 성북구 이미지는 원본을 자르거나 늘리지 않고, 비율을 지킨 채 크기만 맞춘다(공공누리 제4유형·변경금지) */
+.brand__logo, .site-foot__inner img, .side-mascot, .mascot-fig img { object-fit: contain; }
+.site-foot__inner { align-items: flex-start; }
+.site-foot__inner > div, .site-foot__inner p { flex: 1 1 280px; }
+.site-foot__credit { font: var(--t2) !important; line-height: 1.6; }
+.mascot-fig { margin: 0 0 var(--x3); text-align: center; }
+.mascot-fig img { width: 160px; height: auto; }
+.mascot-fig--right { float: right; margin: 0 0 var(--x2) var(--x4); }
