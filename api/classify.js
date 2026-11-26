@@ -158,8 +158,10 @@ export default async function handler(req, res) {
     basisDropped = checked.dropped;
     basisNote = basis.length ? note : '답변참고문서에서 근거 조문을 고르지 못함 — 담당자 확인 필요';
   } else {
-    // AI를 못 부르면 차단후보로 올리지 않는다(안내 창은 1·2차가 모두 차단후보일 때만)
-    stage = lex.stage === '정상' ? '정상' : '검토필요';
+    // AI를 못 부르면 차단후보로 올리지 않는다(안내 창은 1·2차가 모두 차단후보일 때만).
+    // 표현 목록에 걸린 게 없다고 "정상"이라고 하면 목록에 없는 위협 글에 정상 딱지가 붙는다.
+    // 그래서 판단하지 못했다는 뜻으로 stage 를 비워(null) 「AI 미표시」로 담당자에게 보낸다.
+    stage = lex.stage === '정상' ? null : '검토필요';
     body = demoValues(masked, lex.hits);
     basisNote = 'AI를 부르지 못해 판단 근거 조문을 고르지 못함 — 담당자가 원문으로 확인 필요';
   }
@@ -178,6 +180,7 @@ export default async function handler(req, res) {
     provider: ai.ok ? ai.provider : null,
     model: ai.ok ? ai.model : null,
     demo: !ai.ok,
+    unjudged: stage === null, // AI 도 표현 목록도 판단하지 못함 — 담당자가 원문으로 확인
     tried: ai.tried,
     basis,            // 판단 근거: AI 가 고르고 서버가 답변참고문서 후보와 대조해 남긴 조문
     basisNote,
