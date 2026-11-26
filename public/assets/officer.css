@@ -73,3 +73,8 @@
   .board__list { position: static; max-height: 50vh; }
   .versus { grid-template-columns: 1fr; }
 }
+
+.tools { display: grid; grid-template-columns: 1fr auto; gap: var(--x2); margin-top: var(--x3); }
+.input--sm, .select--sm { padding: var(--x2) var(--x3); font: var(--t3); min-width: 0; }
+.list { max-height: calc(100vh - 260px); overflow: auto; }
+.keys { margin: var(--x2) 0 0; } kbd { border: 1px solid var(--stroke-neutral-weak); border-bottom-width: 2px; border-radius: var(--r1); padding: 0 5px; font: var(--t2); background: var(--bg-layer-default); }

@@ -151,3 +151,15 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--bg-brand-solid
 /* [R5] 업무 화면(담당자·관리자)은 머리 띠를 빼고 왼쪽 선만 — 강조면을 화면당 한 곳으로 줄임 */
 .page-head--work { background: none; color: var(--fg-neutral); padding: 0 0 0 var(--x3); border-radius: 0; box-shadow: inset 3px 0 0 var(--lime-500); overflow: visible; }
 .page-head--work p { color: var(--fg-neutral-muted); }
+
+/* ── 접근성: 본문 바로가기 · 글자 크기 ───────── */
+.skip { position: absolute; left: var(--x2); top: -60px; z-index: 100; background: var(--sb-head); color: #fff; padding: var(--x2) var(--x4); border-radius: var(--r2); font: var(--t4); font-weight: 700; text-decoration: none; }
+.skip:focus { top: var(--x2); }
+.fsz { border: 1px solid var(--stroke-input); background: var(--bg-layer-default); color: var(--fg-neutral); border-radius: var(--full); width: 36px; height: 36px; font-weight: 700; cursor: pointer; flex: none; }
+.fsz[data-level="0"] { font-size: 14px; } .fsz[data-level="1"] { font-size: 17px; } .fsz[data-level="2"] { font-size: 21px; }
+.fsz:hover { background: var(--bg-brand-weak); }
+html[data-font="l"] body { zoom: 1.125; }
+html[data-font="xl"] body { zoom: 1.25; }
+@media (max-width: 767px) { .nav { order: 3; } .fsz { margin-left: auto; } }
+.nav a { white-space: nowrap; }
+@media (max-width: 767px) { .side-mascot { display: none; } .nav { flex-wrap: nowrap; } }

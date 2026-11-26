@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>처리 상태 · 성북 안심 민원 필터</title>
   <link rel="stylesheet" href="/assets/app.css">
+  <script src="/assets/common.js"></script>
   <link rel="stylesheet" href="/assets/status.css">
 </head>
 <body>
+  <a class="skip" href="#main">본문 바로가기</a>
   <header class="topbar">
     <div class="topbar__inner">
       <a class="brand" href="/"><img class="brand__logo" src="/assets/img/sb-logo.png" alt="성북구"><span class="brand__sep" aria-hidden="true"></span>안심 민원 필터 <small>시제품</small></a>
@@ -16,11 +18,12 @@
         <a href="/status" aria-current="page">처리 상태</a>
         <a href="/officer">담당자 현황판</a>
         <a href="/admin">관리·감독</a>
+        <a href="/about">서비스 소개</a>
       </nav>
     </div>
   </header>
 
-  <main class="page status">
+  <main id="main" class="page status">
     <div class="page-head">
       <div class="page-head__text">
         <h1>처리 상태 보기</h1>
@@ -39,6 +42,11 @@
         </div>
         <button class="btn btn--brand" type="submit">조회</button>
       </form>
+    </section>
+
+    <section class="card" id="recent" aria-labelledby="recent-t" hidden>
+      <h2 id="recent-t">이 브라우저에서 접수한 민원</h2>
+      <ul class="recent" id="recent-list"></ul>
     </section>
 
     <section class="card" id="result" hidden aria-labelledby="result-title" tabindex="-1"></section>

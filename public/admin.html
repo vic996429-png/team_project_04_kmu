@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>관리·감독 · 성북 안심 민원 필터</title>
   <link rel="stylesheet" href="/assets/app.css">
+  <script src="/assets/common.js"></script>
   <link rel="stylesheet" href="/assets/admin.css">
 </head>
 <body>
+  <a class="skip" href="#main">본문 바로가기</a>
   <header class="topbar">
     <div class="topbar__inner">
       <a class="brand" href="/"><img class="brand__logo" src="/assets/img/sb-logo.png" alt="성북구"><span class="brand__sep" aria-hidden="true"></span>안심 민원 필터 <small>시제품</small></a>
@@ -16,11 +18,12 @@
         <a href="/status">처리 상태</a>
         <a href="/officer">담당자 현황판</a>
         <a href="/admin" aria-current="page">관리·감독</a>
+        <a href="/about">서비스 소개</a>
       </nav>
     </div>
   </header>
 
-  <main class="page">
+  <main id="main" class="page">
     <div class="page-head page-head--work">
       <h1>관리·감독</h1>
       <p>부서 관리자·감사 담당용 화면입니다. AI 판단이 담당자 판단과 얼마나 다른지 보고, 이상하면 AI 표시를 멈춥니다.</p>
@@ -62,7 +65,7 @@
     <section class="card">
       <h2>지표 <span class="small muted">· 이 브라우저에 쌓인 시연 데이터 기준</span></h2>
       <div class="stats" id="stats"></div>
-      <p class="small muted">목표 수치는 근거 자료가 없어 정하지 않았습니다(기획서 3.7). 잰 값만 보여 줍니다.</p>
+      <p class="small muted">목표 수치는 근거 자료가 없어 정하지 않았습니다(기획서 3.7). 잰 값만 보여 줍니다. 지표의 계산 방법은 <a href="/about#kpi">서비스 소개 · 성과지표 정의</a>에 있습니다.</p>
     </section>
 
     <div class="two">

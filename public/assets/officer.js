@@ -1,7 +1,7 @@
 // 담당자 현황판 — 순화본·요약을 먼저 보여 주고 원문은 [원문 보기]로만 연다(기획서 3.1-6).
 // 단계 확정·변경은 담당자만 하고, 모든 행동은 판단 이력에 덧붙인다.
 import {
-  STAGES, CHANGE_REASONS, api, appendLog, decide, effectiveStage, esc, fmt, getComplaints, getComplaint,
+  dueDate, STAGES, CHANGE_REASONS, api, appendLog, decide, effectiveStage, esc, fmt, getComplaints, getComplaint,
   highlight, isManual, isOpenByDefault, safeTitleOf, seedIfEmpty, snackbar, stageBadge, taped,
 } from './store.js';
 
@@ -23,8 +23,21 @@ function renderTabs() {
   }).join('');
 }
 
+// 처리 기한까지 남은 날(달력 기준). 이미 확정한 민원은 표시하지 않는다
+function dday(c) {
+  if (c.officerStage) return '';
+  const days = Math.ceil((dueDate(c.createdAt).setHours(23, 59, 59) - Date.now()) / 864e5);
+  if (days < 0) return `<span class="badge badge--block">기한 ${-days}일 지남</span>`;
+  if (days <= 2) return `<span class="badge badge--review">기한 D-${days}</span>`;
+  return `<span class="badge">기한 D-${days}</span>`;
+}
+
 function renderList() {
-  const items = getComplaints().filter((c) => bucket(c) === tab);
+  const q = ($('#q')?.value || '').trim().toLowerCase();
+  const order = $('#sort')?.value || 'due';
+  let items = getComplaints().filter((c) => bucket(c) === tab)
+    .filter((c) => !q || `${c.id} ${safeTitleOf(c)} ${c.summary || ''}`.toLowerCase().includes(q));
+  items = [...items].sort((a, b) => (new Date(a.createdAt) - new Date(b.createdAt)) * (order === 'new' ? -1 : 1));
   if (!items.length) { $('#list').innerHTML = `<li class="empty">${esc(tab)} 민원이 없습니다.</li>`; return; }
   $('#list').innerHTML = items.map((c) => `
     <li class="item" role="option" tabindex="0" aria-selected="${c.id === selected}" data-id="${esc(c.id)}">
@@ -33,6 +46,7 @@ function renderList() {
       <div class="item__sum">${taped(c.summary || '(AI 요약 없음 — 원문 확인 필요)')}</div>
       <div class="item__tags">
         ${c.officerStage ? '<span class="badge">담당자 확정</span>' : '<span class="badge badge--demo">확정 전</span>'}
+        ${dday(c)}
         ${c.seed ? '<span class="badge badge--demo">가상 예시</span>' : ''}
         ${c.guideShown ? `<span class="badge">${esc(c.citizenChoice)}</span>` : ''}
       </div>
@@ -167,6 +181,8 @@ function refresh() {
   renderTabs(); renderList(); renderDetail();
 }
 
+$('#q').addEventListener('input', renderList);
+$('#sort').addEventListener('change', renderList);
 $('#tabs').addEventListener('click', (e) => {
   const b = e.target.closest('[data-tab]');
   if (!b) return;
@@ -181,7 +197,16 @@ function pick(el) {
   if (matchMedia('(max-width: 767px)').matches) $('#detail').scrollIntoView({ behavior: 'smooth' });
 }
 $('#list').addEventListener('click', (e) => { const el = e.target.closest('[data-id]'); if (el) pick(el); });
-$('#list').addEventListener('keydown', (e) => { const el = e.target.closest('[data-id]'); if (el && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); pick(el); } });
+$('#list').addEventListener('keydown', (e) => {
+  const move = { ArrowDown: 1, j: 1, ArrowUp: -1, k: -1 }[e.key];
+  if (move) {
+    e.preventDefault();
+    const els = [...document.querySelectorAll('#list [data-id]')];
+    const i = els.indexOf(e.target.closest('[data-id]'));
+    els[Math.max(0, Math.min(els.length - 1, i + move))]?.focus();
+    return;
+  }
+ const el = e.target.closest('[data-id]'); if (el && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); pick(el); } });
 
 // 선택된 민원이 있으면 그 탭을 연다
 if (selected && getComplaint(selected)) tab = bucket(getComplaint(selected));

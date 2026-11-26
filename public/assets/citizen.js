@@ -39,6 +39,24 @@ const SAMPLES = [
   ['민원 처리 지연', '기타', '씨발 민원 넣은 지 한 달인데 아직도 안 고쳐? 내일까지 안 되면 찾아가서 가만 안 둔다.'],
 ];
 
+// 작성 중인 글은 이 브라우저에만 잠시 저장한다(접수하면 지움). 새로 고침·실수로 닫아도 글을 잃지 않게 한다
+const DRAFT = 'sb.draft';
+const readDraft = () => { try { return JSON.parse(localStorage.getItem(DRAFT) || 'null'); } catch { return null; } };
+function saveDraft() {
+  const d = { title: title.value, category: category.value, text: text.value };
+  try {
+    if (!d.title.trim() && !d.text.trim()) localStorage.removeItem(DRAFT); else localStorage.setItem(DRAFT, JSON.stringify(d));
+  } catch { /* 저장소를 쓸 수 없어도 작성에는 지장 없음 */ }
+  const has = Boolean(d.title.trim() || d.text.trim());
+  $('#draft-clear').hidden = !has;
+  $('#draft-state').textContent = has ? '작성 중인 글은 이 브라우저에 자동으로 저장됩니다.' : '';
+}
+[title, category, text].forEach((el) => el.addEventListener('input', saveDraft));
+$('#draft-clear').addEventListener('click', () => {
+  form.reset(); text.dispatchEvent(new Event('input')); saveDraft(); resetRevision(); title.focus(); snackbar('작성 중인 글을 지웠습니다.');
+});
+{ const d = readDraft(); if (d && (d.title || d.text)) { title.value = d.title || ''; category.value = d.category || category.value; text.value = d.text || ''; text.dispatchEvent(new Event('input')); saveDraft(); snackbar('작성 중이던 글을 불러왔습니다.'); } }
+
 let pending = null;      // 안내 창을 띄운 민원
 let revision = null;     // '제안대로 고치기' | '직접 고치기' — 고친 글은 안내 창 없이 접수
 let firstText = null;    // 고치기 전 글
@@ -156,6 +174,7 @@ $('#send-as-is').addEventListener('click', () => {
 
 function finish(c, maskedNotice = false) {
   pending = null;
+  try { localStorage.removeItem(DRAFT); } catch {}
   $('#write-card').closest('.citizen__grid').hidden = true;
   $('#done').hidden = false;
   $('#done-id').textContent = c.id;
@@ -166,6 +185,11 @@ function finish(c, maskedNotice = false) {
   // H8: 작성 영역이 사라지므로 완료 제목으로 초점을 옮겨 화면낭독기가 결과를 읽게 한다
   $('#done-title').focus();
 }
+
+$('#copy-id').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText($('#done-id').textContent); snackbar('접수번호를 복사했습니다.'); }
+  catch { snackbar('복사하지 못했습니다. 번호를 직접 적어 두세요.'); }
+});
 
 $('#again').addEventListener('click', () => {
   form.reset();

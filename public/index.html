@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>민원 쓰기 · 성북 안심 민원 필터</title>
   <link rel="stylesheet" href="/assets/app.css">
+  <script src="/assets/common.js"></script>
   <link rel="stylesheet" href="/assets/citizen.css">
 </head>
 <body>
+  <a class="skip" href="#main">본문 바로가기</a>
   <header class="topbar">
     <div class="topbar__inner">
       <a class="brand" href="/"><img class="brand__logo" src="/assets/img/sb-logo.png" alt="성북구"><span class="brand__sep" aria-hidden="true"></span>안심 민원 필터 <small>시제품</small></a>
@@ -16,11 +18,12 @@
         <a href="/status">처리 상태</a>
         <a href="/officer">담당자 현황판</a>
         <a href="/admin">관리·감독</a>
+        <a href="/about">서비스 소개</a>
       </nav>
     </div>
   </header>
 
-  <main class="page citizen">
+  <main id="main" class="page citizen">
     <div class="page-head">
       <div class="page-head__text">
         <h1>구청장에게 바란다</h1>
@@ -45,11 +48,16 @@
           </div>
           <div class="field">
             <label for="text">내용<span class="req" aria-hidden="true">*</span></label>
+            <details class="tips" open>
+              <summary>이렇게 쓰면 더 빨리 처리돼요</summary>
+              <ul><li><b>언제</b> 일어났나요?</li><li><b>어디서</b> 일어났나요? (동네·건물 이름)</li><li><b>무엇이</b> 불편한가요?</li><li><b>어떻게</b> 해 주길 바라나요?</li></ul>
+            </details>
             <textarea class="textarea" id="text" name="text" maxlength="4000" required placeholder="언제, 어디서, 무엇이 불편한지 적어 주시면 더 빨리 처리할 수 있습니다."></textarea>
             <div class="help"><span id="text-err" class="err" role="alert"></span><span><span id="count">0</span> / 4,000자</span></div>
           </div>
           <fieldset class="consent" aria-describedby="consent-err">
             <legend>개인정보 수집·이용 안내</legend>
+            <p class="easy"><b>쉽게 말하면</b> 쓰신 글은 이 시제품 브라우저에만 저장되고, AI가 살펴보는 것은 <b>선택</b>이며 동의하지 않아도 접수됩니다.</p>
             <dl class="consent__table">
               <div><dt>목적</dt><dd>민원 접수·처리, 접수 전 표현 안내</dd></div>
               <div><dt>항목</dt><dd>제목, 분야, 내용(내용에 적은 개인정보 포함)</dd></div>
@@ -61,16 +69,28 @@
             <p class="err" id="consent-err" role="alert"></p>
             <p class="small muted">고지 항목 근거: 「개인정보 보호법」 제15조제2항. 외부 AI 전송이 처리 위탁·국외 이전에 해당하는지는 [확인 필요]</p>
           </fieldset>
+          <div class="draftbar"><span class="small muted" id="draft-state" role="status"></span><button class="linkbtn" type="button" id="draft-clear" hidden>작성 중인 글 지우기</button></div>
           <button class="btn btn--brand btn--lg btn--block" id="submit" type="submit">민원 접수하기</button>
         </form>
       </section>
 
       <aside class="citizen__side" aria-label="이용 안내">
+        <ol class="howto" aria-label="접수 순서">
+          <li><b>쓰기</b><span>제목과 내용을 적어요</span></li>
+          <li><b>살펴보기</b><span>거친 표현이 있으면 안내해요<small>(선택)</small></span></li>
+          <li><b>접수</b><span>접수번호를 받아요</span></li>
+        </ol>
         <img class="side-mascot" src="/assets/img/mascot-banner.png" alt="쨕쨕이: 성북을 꼼꼼하게 살피는 참새, 감탄이: 성북의 좋은 소식에 감동을 더하는 감">
         <div class="callout callout--brand notice">
           <div>
             <p><b>AI가 표현을 살펴봅니다</b></p>
             <p class="small">접수 전에 AI가 욕설·위협 표현이 있는지 살펴보고, 있으면 고쳐 쓸 문장을 제안합니다. 제안을 따르지 않아도 그대로 접수되며 처리 기한도 같습니다.</p>
+          </div>
+        </div>
+        <div class="callout callout--neutral pledge">
+          <div>
+            <p><b>접수는 언제나 됩니다</b></p>
+            <p class="small">거친 표현이 있어도 접수를 막지 않고, 안내를 따르지 않아도 불이익이 없습니다. <a href="/about#diff">기존 창구와 다른 점</a></p>
           </div>
         </div>
         <div class="callout callout--neutral">
@@ -96,7 +116,7 @@
       <h2 id="done-title" tabindex="-1">접수되었습니다</h2>
       <p class="muted" id="done-msg"></p>
       <dl class="done__meta">
-        <div><dt>접수번호</dt><dd id="done-id"></dd></div>
+        <div><dt>접수번호</dt><dd><span id="done-id"></span> <button class="linkbtn" type="button" id="copy-id">복사</button></dd></div>
         <div><dt>처리 기간</dt><dd id="done-period">—</dd></div>
         <div><dt>문의</dt><dd id="done-contact">—</dd></div>
       </dl>

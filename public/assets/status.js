@@ -1,5 +1,5 @@
 // 처리 상태 보기 — 민원인에게는 내부 단계 이름(정상/검토필요/차단후보)을 보여 주지 않는다
-import { addObjection, dueDate, effectiveStage, esc, fmt, getComplaint, seedIfEmpty, snackbar } from './store.js';
+import { getComplaints, addObjection, dueDate, effectiveStage, esc, fmt, getComplaint, seedIfEmpty, snackbar } from './store.js';
 
 seedIfEmpty();
 const $ = (s) => document.querySelector(s);
@@ -69,3 +69,14 @@ function lookup(id) {
 $('#lookup').addEventListener('submit', (e) => { e.preventDefault(); lookup($('#rid').value); });
 const q = new URLSearchParams(location.search).get('id');
 if (q) { $('#rid').value = q; lookup(q); }
+
+// 접수번호를 몰라도 이 브라우저에서 낸 민원을 눌러 볼 수 있게 한다(시연 데이터는 제외)
+const mine = getComplaints().filter((c) => !c.seed).slice(0, 5);
+if (mine.length) {
+  $('#recent').hidden = false;
+  $('#recent-list').innerHTML = mine.map((c) => `<li><button type="button" class="recent__btn" data-id="${esc(c.id)}"><b>${esc(c.title)}</b><span>${esc(c.id)} · ${fmt(c.createdAt)}</span></button></li>`).join('');
+  $('#recent-list').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-id]'); if (!b) return;
+    $('#rid').value = b.dataset.id; lookup(b.dataset.id);
+  });
+}

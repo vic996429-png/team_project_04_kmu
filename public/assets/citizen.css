@@ -44,3 +44,15 @@
 }
 
 .side-mascot { width: 100%; height: auto; border-radius: var(--r3); background: #fff; display: block; }
+
+.tips { border-radius: var(--r2); background: var(--bg-layer-fill); padding: var(--x2) var(--x3); font: var(--t3); color: var(--fg-neutral-muted); }
+.tips summary { cursor: pointer; font-weight: 700; color: var(--fg-brand-text); }
+.tips ul { margin: var(--x2) 0 var(--x1); padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: var(--x1_5) var(--x4); }
+.tips b { color: var(--fg-neutral); }
+.howto { list-style: none; counter-reset: h; margin: 0; padding: var(--x3) var(--x4); border-radius: var(--r3); background: var(--bg-layer-default); display: grid; gap: var(--x2); }
+.howto li { counter-increment: h; display: grid; grid-template-columns: 24px 1fr; column-gap: var(--x2); align-items: start; }
+.howto li::before { content: counter(h); grid-row: 1 / 3; width: 24px; height: 24px; border-radius: 50%; background: var(--sb-head); color: #fff; display: grid; place-items: center; font: var(--t3); font-weight: 700; }
+.howto b { font: var(--t4); } .howto span { font: var(--t3); color: var(--fg-neutral-muted); } .howto small { margin-left: 4px; }
+.pledge { background: var(--lime-100); box-shadow: inset 3px 0 0 var(--lime-500); color: var(--fg-neutral); }
+.draftbar { display: flex; justify-content: space-between; align-items: center; gap: var(--x2); min-height: 20px; margin: 0 0 var(--x2); }
+.easy { margin: 0; padding: var(--x2) var(--x3); border-radius: var(--r2); background: var(--lime-100); font: var(--t4); line-height: 1.6; }

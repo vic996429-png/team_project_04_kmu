@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>담당자 현황판 · 성북 안심 민원 필터</title>
   <link rel="stylesheet" href="/assets/app.css">
+  <script src="/assets/common.js"></script>
   <link rel="stylesheet" href="/assets/officer.css">
 </head>
 <body>
+  <a class="skip" href="#main">본문 바로가기</a>
   <header class="topbar">
     <div class="topbar__inner wide">
       <a class="brand" href="/"><img class="brand__logo" src="/assets/img/sb-logo.png" alt="성북구"><span class="brand__sep" aria-hidden="true"></span>안심 민원 필터 <small>시제품</small></a>
@@ -16,11 +18,12 @@
         <a href="/status">처리 상태</a>
         <a href="/officer" aria-current="page">담당자 현황판</a>
         <a href="/admin">관리·감독</a>
+        <a href="/about">서비스 소개</a>
       </nav>
     </div>
   </header>
 
-  <main class="page wide">
+  <main id="main" class="page wide">
     <div class="page-head page-head--work row">
       <div>
         <h1>담당자 현황판</h1>
@@ -33,6 +36,13 @@
     <div class="board">
       <section class="board__list card" aria-label="민원 목록">
         <div class="seg" role="tablist" id="tabs"></div>
+        <div class="tools">
+          <label class="sr-only" for="q">민원 검색</label>
+          <input class="input input--sm" id="q" type="search" placeholder="번호·제목·요약 검색" autocomplete="off">
+          <label class="sr-only" for="sort">정렬</label>
+          <select class="select select--sm" id="sort"><option value="due">기한 임박 순</option><option value="new">최신 접수 순</option></select>
+        </div>
+        <p class="small muted keys">목록에서 <kbd>↑</kbd> <kbd>↓</kbd> 또는 <kbd>J</kbd> <kbd>K</kbd>로 이동, <kbd>Enter</kbd>로 열기</p>
         <ul class="list" id="list" role="listbox" aria-label="민원"></ul>
       </section>
 
