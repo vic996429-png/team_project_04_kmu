@@ -33,20 +33,20 @@
       <div id="manual-flag" hidden class="badge badge--review">AI 표시 일시 중지 중</div>
     </div>
 
+    <div class="seg" role="tablist" id="tabs"></div>
+
     <div class="board">
-      <section class="board__list card" aria-label="민원 목록">
-        <div class="seg" role="tablist" id="tabs"></div>
+      <section class="board__list" aria-label="민원 목록">
         <div class="tools">
           <label class="sr-only" for="q">민원 검색</label>
           <input class="input input--sm" id="q" type="search" placeholder="번호·제목·요약 검색" autocomplete="off">
           <label class="sr-only" for="sort">정렬</label>
           <select class="select select--sm" id="sort"><option value="due">기한 임박 순</option><option value="new">최신 접수 순</option></select>
         </div>
-        <p class="small muted keys">목록에서 <kbd>↑</kbd> <kbd>↓</kbd> 또는 <kbd>J</kbd> <kbd>K</kbd>로 이동, <kbd>Enter</kbd>로 열기</p>
         <ul class="list" id="list" role="listbox" aria-label="민원"></ul>
       </section>
 
-      <section class="board__detail card card--accent" id="detail" aria-live="polite">
+      <section class="board__detail" id="detail" aria-live="polite">
         <p class="muted">왼쪽 목록에서 민원을 고르세요.</p>
       </section>
 
