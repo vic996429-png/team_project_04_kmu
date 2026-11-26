@@ -1,7 +1,7 @@
 .wide { max-width: 1280px; }
 .page-head.row { align-items: flex-end; }
-.board { display: grid; grid-template-columns: 320px minmax(0, 1fr) 300px; gap: var(--x3); align-items: start; }
-.board__list, .board__rules { position: sticky; top: 76px; max-height: calc(100vh - 92px); overflow: auto; }
+.board { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: var(--x3); align-items: start; }
+.board__list { position: sticky; top: 76px; max-height: calc(100vh - 92px); overflow: auto; }
 .board__list { padding: var(--x3); }
 .board__list .seg { display: grid; grid-template-columns: 1fr 1fr; border-radius: var(--r3); }
 .board__list .seg button { border-radius: var(--r2); }
@@ -53,20 +53,8 @@
 .radios input { accent-color: var(--bg-brand-solid); }
 .radios label:has(input:checked) { box-shadow: inset 0 0 0 2px var(--stroke-brand); background: var(--bg-brand-weak); font-weight: 700; }
 
-/* 관련 규정 */
-.law { padding: var(--x3) 0; border-top: 1px solid var(--stroke-neutral-subtle); }
-.law:first-child { border-top: 0; }
-.law__name { font: var(--t4); font-weight: 700; margin: 0 0 var(--x1); }
-.law__meta { font: var(--t3); color: var(--fg-neutral-muted); margin: 0 0 var(--x2); }
-.law__why { font: var(--t2); color: var(--fg-neutral-subtle); }
-.law__caution { margin: var(--x2) 0 0; padding: var(--x2) var(--x2_5, 10px); border-radius: var(--r2); background: var(--bg-warning-weak); color: var(--fg-warning-contrast); font: var(--t2); }
-.law__out { margin-top: var(--x2); padding: var(--x3); border-radius: var(--r2); background: var(--bg-layer-fill); font: var(--t3); line-height: 1.6; white-space: pre-wrap; max-height: 260px; overflow: auto; }
-.rules__sub { margin: var(--x5) 0 var(--x2); font: var(--t4); font-weight: 700; color: var(--fg-neutral); }
-.notice-card { padding: var(--x3); border-radius: var(--r2); background: var(--bg-layer-fill); font: var(--t3); display: grid; gap: var(--x1); }
 
 @media (max-width: 1199px) {
-  .board { grid-template-columns: 300px minmax(0, 1fr); }
-  .board__rules { grid-column: 1 / -1; position: static; max-height: none; }
 }
 @media (max-width: 767px) {
   .board { grid-template-columns: 1fr; }
